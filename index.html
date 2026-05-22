@@ -1,0 +1,1477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Tashkeel — Real-Time Mosque Translation</title>
+<meta name="description" content="Tashkeel is a real-time wireless translation system for mosques. One microphone for the Imam, unlimited earpieces for the congregation — every worshipper hears the sermon in their own language."/>
+<meta property="og:title" content="Tashkeel — Real-Time Mosque Translation"/>
+<meta property="og:description" content="1.9 billion Muslims. 80% don't speak Arabic. Tashkeel gives every worshipper real-time translation of the Imam's words — in their own language, through a discreet earpiece."/>
+<meta property="og:type" content="website"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Tashkeel — Real-Time Mosque Translation"/>
+<meta name="twitter:description" content="Real-time AI translation for mosque sermons. One mic, unlimited earpieces, 100+ languages. Built for the global Muslim Ummah."/>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%231B6B4A'/><text y='24' x='5' font-size='20' font-family='serif' fill='%23F0C040'>ت</text></svg>"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+/* ════════════════════════════════════════
+   DESIGN TOKENS — LIGHT WARM THEME
+════════════════════════════════════════ */
+:root {
+  --cream:     #FAF6EE;
+  --cream2:    #F3EDE0;
+  --cream3:    #EBE2CE;
+  --parchment: #E0D5BE;
+  --emerald:   #1B6B4A;
+  --emerald2:  #23845C;
+  --emerald3:  #2EA070;
+  --gold:      #B8860B;
+  --gold2:     #D4A017;
+  --gold3:     #F0C040;
+  --ink:       #1A1208;
+  --ink2:      #2D2416;
+  --ink3:      #4A3F2F;
+  --muted:     #7A6E5F;
+  --muted2:    #A09384;
+  --accent:    #8B4513;
+  --white:     #FFFFFF;
+  --shadow:    rgba(26,18,8,0.08);
+  --shadow2:   rgba(26,18,8,0.15);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  background: var(--cream);
+  color: var(--ink2);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 400;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* ════ PAGES ════ */
+.page { display: none; animation: pageFade 0.4s ease; }
+.page.active { display: block; }
+@keyframes pageFade { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+
+/* ════ GEOMETRIC BACKGROUND PATTERN ════ */
+.geo-pattern {
+  position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cg fill='none' stroke='%23B8860B' stroke-width='0.8'%3E%3Cpolygon points='60,10 110,35 110,85 60,110 10,85 10,35'/%3E%3Cpolygon points='60,25 95,42 95,78 60,95 25,78 25,42'/%3E%3Cline x1='60' y1='10' x2='60' y2='25'/%3E%3Cline x1='110' y1='35' x2='95' y2='42'/%3E%3Cline x1='110' y1='85' x2='95' y2='78'/%3E%3Cline x1='60' y1='110' x2='60' y2='95'/%3E%3Cline x1='10' y1='85' x2='25' y2='78'/%3E%3Cline x1='10' y1='35' x2='25' y2='42'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: repeat;
+}
+
+/* ════ NAV ════ */
+nav {
+  position: sticky; top: 0; z-index: 200;
+  background: rgba(250,246,238,0.95);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--cream3);
+  padding: 0 5vw;
+  box-shadow: 0 2px 20px var(--shadow);
+}
+.nav-inner {
+  max-width: 1200px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 68px;
+}
+.logo-wrap { display: flex; align-items: center; gap: 0.7rem; cursor: pointer; text-decoration: none; }
+.logo-mark {
+  width: 38px; height: 38px;
+  background: linear-gradient(135deg, var(--emerald), var(--emerald3));
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.3rem; color: white; font-weight: 600;
+  box-shadow: 0 4px 12px rgba(27,107,74,0.3);
+}
+.logo-text { font-family: 'Cormorant Garamond', serif; font-size: 1.45rem; font-weight: 600; color: var(--ink); letter-spacing: 0.05em; }
+.logo-sub { font-size: 0.68rem; color: var(--muted); letter-spacing: 0.18em; text-transform: uppercase; font-family: 'Plus Jakarta Sans', sans-serif; line-height: 1; }
+
+.nav-links { display: flex; align-items: center; gap: 0.5rem; list-style: none; }
+.nav-links li a, .nav-links li button {
+  background: none; border: none; cursor: pointer;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.82rem; font-weight: 500;
+  color: var(--ink3); letter-spacing: 0.05em;
+  padding: 0.45rem 0.85rem; border-radius: 6px;
+  text-decoration: none; transition: background 0.2s, color 0.2s;
+}
+.nav-links li a:hover, .nav-links li button:hover { background: var(--cream2); color: var(--emerald); }
+.nav-links li a.active, .nav-links li button.active { color: var(--emerald); background: rgba(27,107,74,0.08); }
+
+.nav-cta {
+  background: var(--emerald) !important;
+  color: white !important; border-radius: 8px !important;
+  padding: 0.5rem 1.2rem !important;
+  box-shadow: 0 4px 14px rgba(27,107,74,0.25) !important;
+  transition: background 0.2s, box-shadow 0.2s, transform 0.2s !important;
+}
+.nav-cta:hover { background: var(--emerald2) !important; transform: translateY(-1px) !important; box-shadow: 0 6px 20px rgba(27,107,74,0.3) !important; }
+
+.hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 8px; }
+.hamburger span { display: block; width: 22px; height: 2px; background: var(--ink2); border-radius: 2px; transition: all 0.3s; }
+.mobile-menu {
+  display: none; position: fixed; top: 68px; left: 0; right: 0;
+  background: var(--cream); border-bottom: 1px solid var(--cream3);
+  padding: 1rem 5vw; z-index: 199; flex-direction: column; gap: 0.3rem;
+  box-shadow: 0 8px 30px var(--shadow);
+}
+.mobile-menu.open { display: flex; }
+.mobile-menu a, .mobile-menu button {
+  background: none; border: none; cursor: pointer;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.95rem; font-weight: 500; color: var(--ink2);
+  padding: 0.7rem 0.5rem; border-radius: 6px; text-decoration: none;
+  text-align: left; transition: background 0.2s, color 0.2s;
+}
+.mobile-menu a:hover, .mobile-menu button:hover { background: var(--cream2); color: var(--emerald); }
+
+/* ════ SHARED LAYOUT ════ */
+.container { max-width: 1200px; margin: 0 auto; padding: 0 5vw; }
+.section { padding: 6rem 5vw; position: relative; z-index: 1; }
+.section-sm { padding: 4rem 5vw; }
+
+.label {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  font-size: 0.72rem; font-weight: 600; letter-spacing: 0.22em;
+  text-transform: uppercase; color: var(--emerald);
+  background: rgba(27,107,74,0.08); padding: 0.3rem 0.8rem;
+  border-radius: 20px; margin-bottom: 1.2rem;
+}
+.label::before { content: ''; width: 6px; height: 6px; background: var(--emerald3); border-radius: 50%; }
+
+.heading {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2rem, 4.5vw, 3.2rem);
+  font-weight: 400; line-height: 1.15; color: var(--ink);
+}
+.heading em { font-style: italic; color: var(--emerald); }
+.heading .gold { color: var(--gold); }
+
+.subtext { color: var(--muted); line-height: 1.8; font-size: 1rem; max-width: 580px; margin-top: 1rem; }
+
+/* Buttons */
+.btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.8rem; border-radius: 8px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.85rem; font-weight: 600; letter-spacing: 0.06em; text-decoration: none; cursor: pointer; border: none; transition: all 0.25s; }
+.btn-green { background: var(--emerald); color: white; box-shadow: 0 6px 20px rgba(27,107,74,0.25); }
+.btn-green:hover { background: var(--emerald2); transform: translateY(-2px); box-shadow: 0 10px 28px rgba(27,107,74,0.3); }
+.btn-outline { background: transparent; color: var(--emerald); border: 1.5px solid var(--emerald); }
+.btn-outline:hover { background: rgba(27,107,74,0.06); transform: translateY(-2px); }
+.btn-gold { background: linear-gradient(135deg, var(--gold), var(--gold2)); color: white; box-shadow: 0 6px 20px rgba(184,134,11,0.25); }
+.btn-gold:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(184,134,11,0.35); }
+
+/* Cards */
+.card { background: white; border-radius: 16px; border: 1px solid var(--cream3); box-shadow: 0 4px 20px var(--shadow); padding: 2rem; transition: transform 0.3s, box-shadow 0.3s; }
+.card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px var(--shadow2); }
+
+/* Divider */
+.divider { width: 60px; height: 3px; background: linear-gradient(90deg, var(--emerald), var(--gold)); border-radius: 2px; margin: 1.2rem 0; }
+
+/* Reveal */
+.reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.65s ease, transform 0.65s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ════════════════════════════════════════
+   PAGE 1 — HOME
+════════════════════════════════════════ */
+
+/* Hero */
+.hero {
+  min-height: calc(100vh - 68px);
+  display: flex; flex-direction: column;
+  background:
+    radial-gradient(ellipse 70% 60% at 80% 20%, rgba(27,107,74,0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 50% at 10% 80%, rgba(184,134,11,0.06) 0%, transparent 55%),
+    var(--cream);
+  position: relative; overflow: hidden; z-index: 1;
+}
+.hero-inner {
+  max-width: 1200px; margin: 0 auto; padding: 5rem 5vw 4rem;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 4rem; align-items: center; flex: 1;
+}
+.hero-content { }
+.hero-arabic {
+  font-family: 'Noto Nastaliq Urdu', serif;
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  color: var(--gold); opacity: 0.7;
+  margin-bottom: 1.5rem; line-height: 1.8;
+  animation: fadeUp 1s ease both;
+}
+.hero h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.6rem, 5.5vw, 4.5rem);
+  font-weight: 400; line-height: 1.05;
+  color: var(--ink); margin-bottom: 1.5rem;
+  animation: fadeUp 1s 0.15s ease both;
+}
+.hero h1 em { font-style: italic; color: var(--emerald); }
+.hero-desc {
+  font-size: 1.05rem; color: var(--muted);
+  line-height: 1.85; margin-bottom: 2.5rem; max-width: 480px;
+  animation: fadeUp 1s 0.3s ease both;
+}
+.hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; animation: fadeUp 1s 0.45s ease both; }
+.hero-trust { margin-top: 3rem; display: flex; align-items: center; gap: 1.2rem; flex-wrap: wrap; animation: fadeUp 1s 0.6s ease both; }
+.trust-dot { width: 8px; height: 8px; background: var(--emerald3); border-radius: 50%; }
+.trust-text { font-size: 0.8rem; color: var(--muted2); letter-spacing: 0.04em; }
+
+/* Hero illustration */
+.hero-visual {
+  animation: fadeUp 1s 0.2s ease both;
+  position: relative; display: flex; justify-content: center; align-items: center;
+}
+.mosque-card {
+  background: white; border-radius: 24px;
+  box-shadow: 0 20px 60px rgba(26,18,8,0.12), 0 4px 16px rgba(26,18,8,0.06);
+  padding: 2rem; width: 100%; max-width: 420px;
+  position: relative; overflow: hidden;
+}
+.mosque-card::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(27,107,74,0.03), rgba(184,134,11,0.03));
+  pointer-events: none;
+}
+.mc-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 1.5rem; padding-bottom: 1rem;
+  border-bottom: 1px solid var(--cream3);
+}
+.mc-title { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 600; color: var(--ink); }
+.mc-badge { background: rgba(27,107,74,0.1); color: var(--emerald); font-size: 0.7rem; font-weight: 600; padding: 0.2rem 0.6rem; border-radius: 20px; letter-spacing: 0.08em; }
+.mc-live { display: flex; align-items: center; gap: 0.4rem; font-size: 0.72rem; color: #E53E3E; font-weight: 600; }
+.mc-live::before { content:''; width:7px; height:7px; background:#E53E3E; border-radius:50%; animation: blink 1.2s ease-in-out infinite; }
+@keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+
+.translation-feed { display: flex; flex-direction: column; gap: 0.8rem; }
+.feed-item {
+  padding: 0.9rem 1rem; border-radius: 10px;
+  font-size: 0.88rem; line-height: 1.6;
+}
+.feed-arabic {
+  background: rgba(184,134,11,0.07);
+  border-left: 3px solid var(--gold2);
+  font-family: 'Noto Nastaliq Urdu', serif;
+  font-size: 1rem; color: var(--ink2); text-align: right; direction: rtl;
+}
+.feed-translated {
+  background: rgba(27,107,74,0.07);
+  border-left: 3px solid var(--emerald2);
+  color: var(--ink2);
+}
+.feed-label { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 0.3rem; }
+.feed-label.ar { color: var(--gold); }
+.feed-label.en { color: var(--emerald); }
+.feed-label.ur { color: #8B4513; }
+.feed-urdu {
+  background: rgba(139,69,19,0.06);
+  border-left: 3px solid #8B4513;
+  font-family: 'Noto Nastaliq Urdu', serif;
+  font-size: 1rem; color: var(--ink2); text-align: right; direction: rtl;
+}
+.mc-footer { margin-top: 1.2rem; display: flex; align-items: center; justify-content: space-between; }
+.earpiece-count { font-size: 0.78rem; color: var(--muted); display: flex; align-items: center; gap: 0.4rem; }
+.dots-row { display: flex; gap: 4px; }
+.edot { width: 10px; height: 10px; border-radius: 50%; background: var(--emerald); opacity: 0.6; }
+.edot:nth-child(1){opacity:1;} .edot:nth-child(2){opacity:0.85;} .edot:nth-child(3){opacity:0.7;}
+.lang-sel { display: flex; gap: 0.4rem; }
+.ls { font-size: 0.7rem; font-weight: 600; padding: 0.2rem 0.5rem; border-radius: 4px; background: var(--cream2); color: var(--muted); }
+.ls.on { background: var(--emerald); color: white; }
+
+/* Stats bar */
+.stats-bar {
+  background: var(--emerald);
+  color: white; padding: 2.5rem 5vw; z-index: 1; position: relative;
+}
+.stats-inner { max-width: 1200px; margin: 0 auto; display: flex; gap: 0; }
+.stat-item { flex: 1; text-align: center; padding: 0 1rem; position: relative; }
+.stat-item + .stat-item::before { content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); height: 40px; width: 1px; background: rgba(255,255,255,0.2); }
+.stat-n {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2rem, 3.5vw, 3rem); font-weight: 600; color: var(--gold3); line-height: 1;
+}
+.stat-l { font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.8; margin-top: 0.35rem; }
+
+/* Problem section */
+.problem-section { background: white; }
+.problem-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; max-width: 1200px; margin: 0 auto; }
+.problem-illo { position: relative; }
+.illo-card {
+  background: var(--cream); border-radius: 20px;
+  padding: 2.5rem; border: 1px solid var(--cream3);
+  position: relative; overflow: hidden;
+}
+.illo-scene { display: flex; flex-direction: column; gap: 1rem; }
+.scene-row { display: flex; align-items: center; gap: 1rem; }
+.scene-person {
+  width: 44px; height: 44px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem; flex-shrink: 0; border: 2px solid;
+}
+.person-confused { background: rgba(239,68,68,0.08); border-color: rgba(239,68,68,0.25); }
+.person-happy { background: rgba(27,107,74,0.08); border-color: rgba(27,107,74,0.25); }
+.scene-bubble {
+  flex: 1; padding: 0.6rem 0.9rem; border-radius: 8px;
+  font-size: 0.82rem; line-height: 1.5;
+}
+.bubble-bad { background: rgba(239,68,68,0.07); color: #C53030; border: 1px solid rgba(239,68,68,0.15); }
+.bubble-good { background: rgba(27,107,74,0.07); color: var(--emerald); border: 1px solid rgba(27,107,74,0.15); }
+
+.problem-content { }
+.problem-content .heading { margin-bottom: 1.5rem; }
+.problem-points { display: flex; flex-direction: column; gap: 1.2rem; margin-top: 2rem; }
+.pp { display: flex; gap: 1rem; align-items: flex-start; }
+.pp-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; margin-top: 0.1rem; }
+.pp-icon.red { background: rgba(239,68,68,0.1); }
+.pp-icon.green { background: rgba(27,107,74,0.1); }
+.pp h4 { font-size: 0.9rem; font-weight: 600; color: var(--ink2); margin-bottom: 0.2rem; }
+.pp p { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+
+/* How section */
+.how-section { background: var(--cream2); }
+.how-steps { max-width: 1200px; margin: 3.5rem auto 0; display: grid; grid-template-columns: repeat(4,1fr); gap: 1.5rem; }
+.step-card {
+  background: white; border-radius: 16px; padding: 2rem;
+  border: 1px solid var(--cream3); position: relative; overflow: hidden;
+  box-shadow: 0 4px 16px var(--shadow); transition: transform 0.3s, box-shadow 0.3s;
+}
+.step-card:hover { transform: translateY(-5px); box-shadow: 0 14px 40px var(--shadow2); }
+.step-card::after {
+  content: attr(data-n);
+  position: absolute; bottom: -10px; right: -5px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 5rem; font-weight: 600; color: var(--cream2); line-height: 1;
+  pointer-events: none; transition: color 0.3s;
+}
+.step-card:hover::after { color: rgba(27,107,74,0.06); }
+.step-emoji { font-size: 2rem; margin-bottom: 1rem; display: block; }
+.step-card h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.25rem; color: var(--ink); margin-bottom: 0.5rem; font-weight: 600; }
+.step-card p { font-size: 0.85rem; color: var(--muted); line-height: 1.7; }
+.step-bar { height: 3px; background: linear-gradient(90deg, var(--emerald), var(--gold2)); border-radius: 2px; margin-bottom: 1.5rem; }
+
+/* Benefit section */
+.benefit-section { background: white; }
+.benefit-grid { max-width: 1200px; margin: 3.5rem auto 0; display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; }
+.benefit-card {
+  border-radius: 16px; padding: 2rem;
+  background: var(--cream); border: 1px solid var(--cream3);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.benefit-card:hover { transform: translateY(-4px); box-shadow: 0 12px 36px var(--shadow2); }
+.benefit-icon { font-size: 2.2rem; margin-bottom: 1rem; }
+.benefit-card h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 600; color: var(--ink); margin-bottom: 0.6rem; }
+.benefit-card p { font-size: 0.88rem; color: var(--muted); line-height: 1.75; }
+
+/* CTA strip */
+.cta-strip {
+  background: linear-gradient(135deg, var(--emerald), var(--emerald2));
+  padding: 5rem 5vw; text-align: center; position: relative; overflow: hidden;
+}
+.cta-strip::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cg fill='none' stroke='rgba(255,255,255,0.07)' stroke-width='0.8'%3E%3Cpolygon points='40,5 75,22 75,58 40,75 5,58 5,22'/%3E%3C/g%3E%3C/svg%3E");
+}
+.cta-strip h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem,4vw,3rem); color: white; margin-bottom: 1rem; position: relative; }
+.cta-strip p { color: rgba(255,255,255,0.8); font-size: 1rem; margin-bottom: 2rem; max-width: 500px; margin-left: auto; margin-right: auto; position: relative; line-height: 1.8; }
+.cta-strip .btn-row { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; position: relative; }
+.btn-white { background: white; color: var(--emerald); box-shadow: 0 6px 20px rgba(0,0,0,0.15); }
+.btn-white:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(0,0,0,0.2); }
+.btn-outline-white { background: transparent; color: white; border: 1.5px solid rgba(255,255,255,0.5); }
+.btn-outline-white:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); }
+
+/* ════════════════════════════════════════
+   PAGE 2 — PRODUCT
+════════════════════════════════════════ */
+.product-hero {
+  background: linear-gradient(160deg, var(--ink) 0%, var(--ink2) 60%, #2C1A0E 100%);
+  padding: 6rem 5vw;
+  position: relative; overflow: hidden; z-index: 1;
+}
+.product-hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cg fill='none' stroke='rgba(184,134,11,0.1)' stroke-width='0.8'%3E%3Cpolygon points='50,5 95,27 95,73 50,95 5,73 5,27'/%3E%3Cpolygon points='50,18 82,34 82,66 50,82 18,66 18,34'/%3E%3C/g%3E%3C/svg%3E");
+}
+.product-hero-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; position: relative; }
+.product-hero h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.2rem, 4.5vw, 3.5rem); font-weight: 400; color: white; line-height: 1.1; margin-bottom: 1rem; }
+.product-hero h1 em { color: var(--gold3); font-style: italic; }
+.product-hero p { color: rgba(255,255,255,0.7); line-height: 1.8; font-size: 0.95rem; }
+
+.spec-visual {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 20px; padding: 2rem;
+  backdrop-filter: blur(10px);
+}
+.sv-title { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 1.5rem; }
+.sv-device { display: flex; flex-direction: column; gap: 1rem; }
+.sv-row { display: flex; align-items: center; gap: 1rem; }
+.sv-icon { width: 44px; height: 44px; border-radius: 10px; background: rgba(240,192,64,0.12); border: 1px solid rgba(240,192,64,0.2); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
+.sv-info h4 { color: white; font-size: 0.9rem; font-weight: 500; }
+.sv-info p { color: rgba(255,255,255,0.5); font-size: 0.78rem; margin-top: 0.1rem; }
+
+/* Spec tables */
+.specs-section { background: white; }
+.specs-grid { max-width: 1200px; margin: 3rem auto 0; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+.spec-panel { background: var(--cream); border-radius: 16px; overflow: hidden; border: 1px solid var(--cream3); }
+.spec-panel-head { padding: 1.5rem 2rem; background: var(--ink); display: flex; align-items: center; gap: 1rem; }
+.spec-panel-head .icon { font-size: 1.5rem; }
+.spec-panel-head h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; color: white; font-weight: 600; }
+.spec-panel-head p { font-size: 0.78rem; color: rgba(255,255,255,0.5); }
+.spec-rows { padding: 0.5rem 0; }
+.spec-row { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 2rem; border-bottom: 1px solid var(--cream3); }
+.spec-row:last-child { border-bottom: none; }
+.sr-key { font-size: 0.82rem; color: var(--muted); }
+.sr-val { font-size: 0.85rem; font-weight: 600; color: var(--ink2); text-align: right; }
+.sr-val.green { color: var(--emerald); }
+.sr-val.gold { color: var(--gold); }
+
+/* Architecture diagram */
+.arch-section { background: var(--cream2); }
+.arch-inner { max-width: 1000px; margin: 3rem auto 0; }
+.arch-diagram {
+  background: white; border-radius: 20px;
+  padding: 3rem; border: 1px solid var(--cream3);
+  box-shadow: 0 8px 30px var(--shadow);
+}
+
+/* ════════════════════════════════════════
+   PAGE 3 — FOR NON-ARABIC USERS
+════════════════════════════════════════ */
+.impact-hero {
+  background: linear-gradient(160deg, rgba(27,107,74,0.08), rgba(184,134,11,0.05), var(--cream));
+  padding: 6rem 5vw 4rem;
+}
+.impact-hero-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
+.impact-hero h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.4rem, 5vw, 4rem); font-weight: 400; color: var(--ink); line-height: 1.1; }
+.impact-hero h1 em { color: var(--emerald); }
+.impact-hero .subtext { font-size: 1rem; }
+
+.quote-card {
+  background: white; border-radius: 20px;
+  border-left: 4px solid var(--emerald);
+  padding: 2rem; box-shadow: 0 8px 30px var(--shadow);
+}
+.qc-arabic { font-family: 'Noto Nastaliq Urdu', serif; font-size: 1.3rem; color: var(--gold); text-align: right; direction: rtl; margin-bottom: 1rem; line-height: 2; }
+.qc-translation { font-size: 0.9rem; color: var(--muted); line-height: 1.7; font-style: italic; border-top: 1px solid var(--cream3); padding-top: 1rem; }
+.qc-translation strong { color: var(--emerald); font-style: normal; }
+.qc-source { font-size: 0.75rem; color: var(--muted2); margin-top: 0.5rem; letter-spacing: 0.05em; }
+
+/* Journey section */
+.journey-section { background: white; }
+.journey-inner { max-width: 1200px; margin: 0 auto; }
+.journey-steps { display: flex; flex-direction: column; gap: 0; margin-top: 3rem; }
+.journey-step {
+  display: grid; grid-template-columns: 80px 1fr;
+  gap: 2rem; padding: 2.5rem 0; border-bottom: 1px solid var(--cream3);
+  align-items: start; position: relative;
+}
+.journey-step:last-child { border-bottom: none; }
+.js-num {
+  width: 56px; height: 56px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.5rem; font-weight: 600; flex-shrink: 0;
+}
+.js-num.before { background: rgba(239,68,68,0.1); color: #C53030; border: 2px solid rgba(239,68,68,0.2); }
+.js-num.after { background: rgba(27,107,74,0.1); color: var(--emerald); border: 2px solid rgba(27,107,74,0.2); }
+.js-content h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; color: var(--ink); margin-bottom: 0.4rem; font-weight: 600; }
+.js-content p { font-size: 0.9rem; color: var(--muted); line-height: 1.75; max-width: 600px; }
+.js-tag { display: inline-block; margin-top: 0.6rem; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.2rem 0.7rem; border-radius: 4px; }
+.tag-before { background: rgba(239,68,68,0.1); color: #C53030; }
+.tag-after { background: rgba(27,107,74,0.1); color: var(--emerald); }
+
+/* Community section */
+.community-section { background: var(--cream2); }
+.community-grid { max-width: 1200px; margin: 3rem auto 0; display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; }
+.person-card {
+  background: white; border-radius: 16px; padding: 1.8rem;
+  border: 1px solid var(--cream3); box-shadow: 0 4px 16px var(--shadow);
+}
+.pc-avatar { font-size: 2.5rem; margin-bottom: 1rem; }
+.pc-name { font-weight: 600; font-size: 0.95rem; color: var(--ink); }
+.pc-origin { font-size: 0.78rem; color: var(--muted); margin-bottom: 1rem; }
+.pc-quote { font-size: 0.85rem; color: var(--ink3); line-height: 1.7; font-style: italic; border-top: 1px solid var(--cream3); padding-top: 1rem; }
+
+/* ════════════════════════════════════════
+   PAGE 4 — CONTACT
+════════════════════════════════════════ */
+.contact-hero {
+  background: linear-gradient(160deg, var(--cream), var(--cream2));
+  padding: 5rem 5vw 3rem; text-align: center;
+}
+.contact-hero-inner { max-width: 700px; margin: 0 auto; }
+
+.contact-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; padding: 5rem 5vw; }
+.contact-form-wrap { }
+.contact-form-wrap h2 { font-family: 'Cormorant Garamond', serif; font-size: 2rem; color: var(--ink); margin-bottom: 0.5rem; }
+.contact-form-wrap p { color: var(--muted); font-size: 0.9rem; line-height: 1.7; margin-bottom: 2rem; }
+
+.form-group { margin-bottom: 1.2rem; }
+.form-group label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--ink3); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 0.5rem; }
+.form-group input, .form-group textarea, .form-group select {
+  width: 100%; padding: 0.75rem 1rem;
+  border: 1.5px solid var(--cream3); border-radius: 8px;
+  background: white; color: var(--ink2);
+  font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.9rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+.form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+  border-color: var(--emerald); box-shadow: 0 0 0 3px rgba(27,107,74,0.1);
+}
+.form-group textarea { resize: vertical; min-height: 120px; }
+.form-note { font-size: 0.8rem; color: var(--muted); margin-top: 1rem; line-height: 1.6; }
+
+.contact-sidebar { display: flex; flex-direction: column; gap: 1.5rem; }
+.cs-card { background: var(--cream); border-radius: 16px; padding: 1.8rem; border: 1px solid var(--cream3); }
+.cs-card h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; color: var(--ink); margin-bottom: 0.5rem; font-weight: 600; }
+.cs-card p { font-size: 0.85rem; color: var(--muted); line-height: 1.6; margin-bottom: 1rem; }
+.contact-link { display: flex; align-items: center; gap: 0.6rem; color: var(--emerald); font-weight: 600; font-size: 0.9rem; text-decoration: none; word-break: break-all; }
+.contact-link:hover { color: var(--emerald2); }
+.cs-divider { height: 1px; background: var(--cream3); }
+
+.intent-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
+.intent-tag { padding: 0.35rem 0.8rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; cursor: pointer; border: 1.5px solid; transition: all 0.2s; }
+.intent-tag.invest { border-color: var(--gold2); color: var(--gold); background: rgba(212,160,23,0.07); }
+.intent-tag.invest:hover, .intent-tag.invest.sel { background: rgba(212,160,23,0.15); }
+.intent-tag.mosque { border-color: var(--emerald); color: var(--emerald); background: rgba(27,107,74,0.07); }
+.intent-tag.mosque:hover, .intent-tag.mosque.sel { background: rgba(27,107,74,0.15); }
+.intent-tag.suggest { border-color: var(--accent); color: var(--accent); background: rgba(139,69,19,0.07); }
+.intent-tag.suggest:hover, .intent-tag.suggest.sel { background: rgba(139,69,19,0.15); }
+.intent-tag.other { border-color: var(--muted2); color: var(--muted); background: rgba(122,110,95,0.07); }
+.intent-tag.other:hover, .intent-tag.other.sel { background: rgba(122,110,95,0.15); }
+
+/* ════════════════════════════════════════
+   FOOTER
+════════════════════════════════════════ */
+footer {
+  background: var(--ink); color: rgba(255,255,255,0.7);
+  padding: 4rem 5vw 2.5rem;
+}
+.footer-inner { max-width: 1200px; margin: 0 auto; }
+.footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 3rem; margin-bottom: 3rem; }
+.footer-brand .logo-text-f { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; color: white; letter-spacing: 0.05em; margin-bottom: 0.8rem; }
+.footer-brand p { font-size: 0.85rem; line-height: 1.7; max-width: 280px; }
+.footer-brand .footer-email { color: var(--gold3); font-size: 0.88rem; font-weight: 500; margin-top: 0.8rem; display: block; text-decoration: none; }
+.footer-col h4 { color: white; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 1.2rem; }
+.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+.footer-col ul li button { background: none; border: none; cursor: pointer; color: rgba(255,255,255,0.6); font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.85rem; padding: 0; transition: color 0.2s; text-align: left; }
+.footer-col ul li button:hover { color: var(--gold3); }
+.footer-col ul li a { color: rgba(255,255,255,0.6); font-size: 0.85rem; text-decoration: none; transition: color 0.2s; }
+.footer-col ul li a:hover { color: var(--gold3); }
+.footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 2rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+.footer-copy { font-size: 0.8rem; }
+.footer-arabic { font-family: 'Noto Nastaliq Urdu', serif; font-size: 1rem; color: var(--gold3); opacity: 0.6; }
+
+/* ════ ANIMATIONS ════ */
+@keyframes fadeUp { from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);} }
+
+/* ════ RESPONSIVE ════ */
+@media (max-width: 900px) {
+  .nav-links { display: none; }
+  .hamburger { display: flex; }
+  .hero-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+  .mosque-card { max-width: 100%; }
+  .stats-inner { flex-wrap: wrap; gap: 1.5rem; }
+  .stat-item + .stat-item::before { display: none; }
+  .stat-item { min-width: 120px; }
+  .problem-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+  .how-steps { grid-template-columns: 1fr 1fr; }
+  .benefit-grid { grid-template-columns: 1fr; }
+  .product-hero-inner { grid-template-columns: 1fr; }
+  .specs-grid { grid-template-columns: 1fr; }
+  .impact-hero-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+  .community-grid { grid-template-columns: 1fr; }
+  .contact-grid { grid-template-columns: 1fr; }
+  .footer-top { grid-template-columns: 1fr; gap: 2rem; }
+  .journey-step { grid-template-columns: 56px 1fr; gap: 1rem; }
+  .section { padding: 4rem 5vw; }
+}
+@media (max-width: 600px) {
+  .how-steps { grid-template-columns: 1fr; }
+  .hero h1 { font-size: 2.2rem; }
+  .hero-btns { flex-direction: column; }
+  .cta-strip .btn-row { flex-direction: column; align-items: center; }
+  .stats-inner { justify-content: center; }
+}
+</style>
+</head>
+<body>
+
+<div class="geo-pattern"></div>
+
+<!-- ════ NAV ════ -->
+<nav>
+  <div class="nav-inner">
+    <a class="logo-wrap" onclick="showPage('home')" href="javascript:void(0)">
+      <div class="logo-mark">T</div>
+      <div>
+        <div class="logo-text">Tashkeel</div>
+        <div class="logo-sub">Mosque Translation</div>
+      </div>
+    </a>
+    <ul class="nav-links">
+      <li><button onclick="showPage('home')" id="nav-home" class="active">Home</button></li>
+      <li><button onclick="showPage('product')" id="nav-product">The Device</button></li>
+      <li><button onclick="showPage('impact')" id="nav-impact">Who It Helps</button></li>
+      <li><button onclick="showPage('contact')" id="nav-contact" class="nav-cta">Contact & Invest</button></li>
+    </ul>
+    <div class="hamburger" onclick="toggleMenu()" id="hamburger">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <button onclick="showPage('home');toggleMenu()">🏠 Home</button>
+  <button onclick="showPage('product');toggleMenu()">📦 The Device</button>
+  <button onclick="showPage('impact');toggleMenu()">🌍 Who It Helps</button>
+  <button onclick="showPage('contact');toggleMenu()">✉️ Contact & Invest</button>
+</div>
+
+<!-- ══════════════════════════════════════
+     PAGE: HOME
+══════════════════════════════════════ -->
+<div id="page-home" class="page active">
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-content">
+        <div class="hero-arabic">ٱقْرَأْ بِٱسْمِ رَبِّكَ</div>
+        <div class="label">Introducing Tashkeel</div>
+        <h1>Every Sermon,<br/><em>Understood by All</em></h1>
+        <p class="hero-desc">
+          A real-time wireless translation system for mosques. The Imam speaks — every worshipper hears the meaning in their own language through a discreet earpiece. No Arabic required.
+        </p>
+        <div class="hero-btns">
+          <button class="btn btn-green" onclick="showPage('product')">Explore the Device →</button>
+          <button class="btn btn-outline" onclick="showPage('contact')">Support the Mission</button>
+        </div>
+        <div class="hero-trust">
+          <div class="trust-dot"></div>
+          <div class="trust-text">100+ languages supported</div>
+        </div>
+      </div>
+
+      <!-- Live Translation Card -->
+      <div class="hero-visual">
+        <div class="mosque-card">
+          <div class="mc-header">
+            <div>
+              <div class="mc-title">Al-Masjid Al-Noor</div>
+              <div style="font-size:0.73rem;color:var(--muted);margin-top:2px;">Friday Jumu'ah · Khutbah</div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+              <div class="mc-live">LIVE</div>
+              <div class="mc-badge">🎧 24 Earpieces</div>
+            </div>
+          </div>
+          <div class="translation-feed">
+            <div class="feed-item feed-arabic">
+              <div class="feed-label ar">Arabic — Imam</div>
+              إِنَّ ٱللَّهَ مَعَ ٱلصَّابِرِينَ
+            </div>
+            <div class="feed-item feed-translated">
+              <div class="feed-label en">English Translation</div>
+              Indeed, Allah is with the patient ones.
+            </div>
+            <div class="feed-item feed-urdu">
+              <div class="feed-label ur" style="text-align:right;">اردو ترجمہ</div>
+              بے شک اللہ صبر کرنے والوں کے ساتھ ہے۔
+            </div>
+          </div>
+          <div class="mc-footer">
+            <div class="earpiece-count">
+              <div class="dots-row"><div class="edot"></div><div class="edot"></div><div class="edot"></div></div>
+              24 listeners connected
+            </div>
+            <div class="lang-sel">
+              <div class="ls on">EN</div>
+              <div class="ls on">UR</div>
+              <div class="ls">FR</div>
+              <div class="ls">TR</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats bar -->
+  <div class="stats-bar">
+    <div class="stats-inner">
+      <div class="stat-item reveal"><div class="stat-n">1.9B</div><div class="stat-l">Muslims Worldwide</div></div>
+      <div class="stat-item reveal"><div class="stat-n">80%</div><div class="stat-l">Non-Arabic Speaking</div></div>
+      <div class="stat-item reveal"><div class="stat-n">&lt;1s</div><div class="stat-l">Translation Latency</div></div>
+      <div class="stat-item reveal"><div class="stat-n">100+</div><div class="stat-l">Languages</div></div>
+      <div class="stat-item reveal"><div class="stat-n">1:∞</div><div class="stat-l">One Mic, Any Earpieces</div></div>
+    </div>
+  </div>
+
+  <!-- Problem section -->
+  <section class="section problem-section">
+    <div class="problem-grid container">
+      <div class="problem-illo reveal">
+        <div class="illo-card">
+          <div style="font-size:0.72rem;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:1.5rem;">Without Tashkeel vs With Tashkeel</div>
+          <div class="illo-scene">
+            <div class="scene-row">
+              <div class="scene-person person-confused">😕</div>
+              <div class="scene-bubble bubble-bad">"The Imam is reciting Surah Al-Baqarah but I don't understand Arabic. I'm just waiting for it to finish."</div>
+            </div>
+            <div style="text-align:center;font-size:0.75rem;color:var(--muted);padding:0.3rem 0;font-style:italic;">— A French Muslim attending Jumu'ah in London</div>
+
+            <div style="height:1px;background:var(--cream3);margin:0.5rem 0;"></div>
+
+            <div class="scene-row">
+              <div class="scene-person person-happy">😌</div>
+              <div class="scene-bubble bubble-good">"I heard every word in French through my earpiece. I finally understood the whole Khutbah. I cried."</div>
+            </div>
+            <div style="text-align:center;font-size:0.75rem;color:var(--muted);padding:0.3rem 0;font-style:italic;">— Same person, with Tashkeel</div>
+
+            <div style="height:1px;background:var(--cream3);margin:0.5rem 0;"></div>
+
+            <div class="scene-row">
+              <div class="scene-person person-confused">🧕</div>
+              <div class="scene-bubble bubble-bad">"I'm a new Muslim from Indonesia. The lectures are in Arabic and I can't connect spiritually yet."</div>
+            </div>
+            <div style="text-align:center;font-size:0.75rem;color:var(--muted);padding:0.3rem 0;font-style:italic;">— A revert sister in Sydney</div>
+
+            <div style="height:1px;background:var(--cream3);margin:0.5rem 0;"></div>
+
+            <div class="scene-row">
+              <div class="scene-person person-happy">🧕</div>
+              <div class="scene-bubble bubble-good">"Now I understand every Ayat being recited. I feel like I truly belong in the congregation."</div>
+            </div>
+            <div style="text-align:center;font-size:0.75rem;color:var(--muted);padding:0.3rem 0;font-style:italic;">— Same sister, with Tashkeel</div>
+          </div>
+        </div>
+      </div>
+      <div class="problem-content reveal">
+        <div class="label">The Problem We Solve</div>
+        <div class="heading">Over a Billion Muslims<br/>Cannot Understand<br/><em class="gold">Their Own Prayers</em></div>
+        <div class="divider"></div>
+        <p class="subtext">Arabic is the language of the Quran — but less than 20% of the world's Muslims speak it. Billions attend prayers, sermons, and lectures every week without understanding what is being said.</p>
+        <div class="problem-points">
+          <div class="pp">
+            <div class="pp-icon red">❌</div>
+            <div><h4>Spiritual Disconnection</h4><p>Non-Arabic speakers cannot engage deeply with the meaning of prayers, reducing the spiritual impact of Salah, Taraweeh, and Jumu'ah.</p></div>
+          </div>
+          <div class="pp">
+            <div class="pp-icon red">❌</div>
+            <div><h4>Language Barrier in the Ummah</h4><p>Mosques in non-Arab countries serve diverse communities — Urdu, Bengali, English, French speakers — but there has been no technology solution until now.</p></div>
+          </div>
+          <div class="pp">
+            <div class="pp-icon green">✅</div>
+            <div><h4>Tashkeel Bridges the Gap</h4><p>Real-time AI translation, delivered silently and privately into each person's ear. The spiritual atmosphere is preserved. The understanding is unlocked.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section class="section how-section">
+    <div class="container" style="max-width:1200px">
+      <div class="reveal" style="text-align:center">
+        <div class="label">How It Works</div>
+        <div class="heading" style="text-align:center">Four Steps.<br/><em>Complete Understanding.</em></div>
+      </div>
+      <div class="how-steps">
+        <div class="step-card reveal" data-n="01">
+          <div class="step-bar"></div>
+          <span class="step-emoji">🎙️</span>
+          <h3>Imam Speaks Naturally</h3>
+          <p>A small, high-quality mic is placed at the pulpit or worn as a lapel. No change to how the Imam conducts prayers or lectures.</p>
+        </div>
+        <div class="step-card reveal" data-n="02">
+          <div class="step-bar"></div>
+          <span class="step-emoji">🧠</span>
+          <h3>AI Translates in Real Time</h3>
+          <p>Advanced speech recognition identifies Arabic, Urdu, or any language — and translates it into the worshipper's selected language within under one second.</p>
+        </div>
+        <div class="step-card reveal" data-n="03">
+          <div class="step-bar"></div>
+          <span class="step-emoji">📡</span>
+          <h3>Wireless Broadcast</h3>
+          <p>Translated audio is broadcast securely within the mosque over a low-latency wireless network. People can also connect via a mobile app by scanning a QR code.</p>
+        </div>
+        <div class="step-card reveal" data-n="04">
+          <div class="step-bar"></div>
+          <span class="step-emoji">🎧</span>
+          <h3>Personal Earpiece</h3>
+          <p>Each worshipper wears a discreet, comfortable earpiece pre-set to their preferred language. They hear translations privately, without disturbing others.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Benefits -->
+  <section class="section benefit-section">
+    <div class="container" style="max-width:1200px">
+      <div class="reveal">
+        <div class="label">Why Tashkeel</div>
+        <div class="heading">Designed with the<br/><em>Congregation in Mind</em></div>
+      </div>
+      <div class="benefit-grid">
+        <div class="benefit-card reveal">
+          <div class="benefit-icon">🕌</div>
+          <h3>Spiritually Respectful</h3>
+          <p>Completely silent and invisible to others. The atmosphere of prayer is not disturbed. Translation happens privately in the ear — not on screens, not via speakers.</p>
+        </div>
+        <div class="benefit-card reveal">
+          <div class="benefit-icon">📱</div>
+          <h3>Bring Your Own or Share</h3>
+          <p>Mosques can buy a set of earpieces for communal use, or individuals can purchase their own and link to any mosque's channel via a QR code using the Tashkeel app.</p>
+        </div>
+        <div class="benefit-card reveal">
+          <div class="benefit-icon">⚡</div>
+          <h3>Under 1 Second Delay</h3>
+          <p>Our AI processing pipeline is optimised for real-time speech, delivering translation with near-zero perceptible delay — so you hear the meaning as the Imam speaks.</p>
+        </div>
+        <div class="benefit-card reveal">
+          <div class="benefit-icon">🌍</div>
+          <h3>100+ Languages</h3>
+          <p>From English and Urdu to French, Bengali, Turkish, Hausa, Malay, and Indonesian — Tashkeel supports the full global diversity of the Muslim Ummah.</p>
+        </div>
+        <div class="benefit-card reveal">
+          <div class="benefit-icon">🔒</div>
+          <h3>Secure & Private</h3>
+          <p>The wireless network operates within the mosque only. Translations are not stored or shared. Each earpiece session is private to the individual wearer.</p>
+        </div>
+        <div class="benefit-card reveal">
+          <div class="benefit-icon">🔋</div>
+          <h3>8-Hour Battery Life</h3>
+          <p>Each earpiece is rechargeable with an 8-hour battery — lasting through the longest Taraweeh prayers in Ramadan without needing a charge.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Languages -->
+  <section class="section-sm" style="background:var(--cream2);position:relative;z-index:1;">
+    <div class="container" style="max-width:1200px">
+      <div class="reveal" style="text-align:center;margin-bottom:2rem;">
+        <div class="label">Supported Languages</div>
+        <div class="heading" style="text-align:center">One Quran.<br/><em>Every Tongue.</em></div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:0.6rem;justify-content:center;margin-top:2rem;" class="reveal">
+        <span style="padding:0.4rem 1.1rem;background:var(--emerald);color:white;border-radius:20px;font-size:0.8rem;font-weight:600;">English</span>
+        <span style="padding:0.4rem 1.1rem;background:var(--emerald);color:white;border-radius:20px;font-size:0.8rem;font-weight:600;">Urdu اردو</span>
+        <span style="padding:0.4rem 1.1rem;background:var(--emerald);color:white;border-radius:20px;font-size:0.8rem;font-weight:600;">Hindi हिन्दी</span>
+        <span style="padding:0.4rem 1.1rem;background:var(--emerald);color:white;border-radius:20px;font-size:0.8rem;font-weight:600;">Bangla বাংলা</span>
+        <span style="padding:0.4rem 1.1rem;background:rgba(27,107,74,0.12);color:var(--emerald);border:1px solid rgba(27,107,74,0.2);border-radius:20px;font-size:0.8rem;font-weight:500;">French</span>
+        <span style="padding:0.4rem 1.1rem;background:rgba(27,107,74,0.12);color:var(--emerald);border:1px solid rgba(27,107,74,0.2);border-radius:20px;font-size:0.8rem;font-weight:500;">Turkish</span>
+        <span style="padding:0.4rem 1.1rem;background:rgba(27,107,74,0.12);color:var(--emerald);border:1px solid rgba(27,107,74,0.2);border-radius:20px;font-size:0.8rem;font-weight:500;">Malay</span>
+        <span style="padding:0.4rem 1.1rem;background:rgba(27,107,74,0.12);color:var(--emerald);border:1px solid rgba(27,107,74,0.2);border-radius:20px;font-size:0.8rem;font-weight:500;">Indonesian</span>
+        <span style="padding:0.4rem 1.1rem;background:rgba(27,107,74,0.12);color:var(--emerald);border:1px solid rgba(27,107,74,0.2);border-radius:20px;font-size:0.8rem;font-weight:500;">Hausa</span>
+        <span style="padding:0.4rem 1.1rem;background:rgba(27,107,74,0.12);color:var(--emerald);border:1px solid rgba(27,107,74,0.2);border-radius:20px;font-size:0.8rem;font-weight:500;">Swahili</span>
+        <span style="padding:0.4rem 1.1rem;background:rgba(27,107,74,0.12);color:var(--emerald);border:1px solid rgba(27,107,74,0.2);border-radius:20px;font-size:0.8rem;font-weight:500;">Farsi</span>
+        <span style="padding:0.4rem 1.1rem;background:rgba(27,107,74,0.12);color:var(--emerald);border:1px solid rgba(27,107,74,0.2);border-radius:20px;font-size:0.8rem;font-weight:500;">Pashto</span>
+        <span style="padding:0.4rem 1.1rem;background:rgba(27,107,74,0.12);color:var(--emerald);border:1px solid rgba(27,107,74,0.2);border-radius:20px;font-size:0.8rem;font-weight:500;">Punjabi</span>
+        <span style="padding:0.4rem 1.1rem;background:rgba(27,107,74,0.12);color:var(--emerald);border:1px solid rgba(27,107,74,0.2);border-radius:20px;font-size:0.8rem;font-weight:500;">Somali</span>
+        <span style="padding:0.4rem 1.1rem;background:rgba(27,107,74,0.12);color:var(--emerald);border:1px solid rgba(27,107,74,0.2);border-radius:20px;font-size:0.8rem;font-weight:500;">German</span>
+        <span style="padding:0.4rem 1.1rem;background:rgba(27,107,74,0.12);color:var(--emerald);border:1px solid rgba(27,107,74,0.2);border-radius:20px;font-size:0.8rem;font-weight:500;">Spanish</span>
+        <span style="padding:0.4rem 1.1rem;background:rgba(27,107,74,0.12);color:var(--emerald);border:1px solid rgba(27,107,74,0.2);border-radius:20px;font-size:0.8rem;font-weight:500;">Tamil</span>
+        <span style="padding:0.4rem 1.1rem;background:rgba(184,134,11,0.12);color:var(--gold);border:1px solid rgba(184,134,11,0.2);border-radius:20px;font-size:0.8rem;font-weight:500;">+ 83 more →</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <div class="cta-strip">
+    <h2>Ready to Bring Tashkeel to Your Mosque?</h2>
+    <p>We are looking for mosque pilot partners, investors, and community champions. Manufacturing is complete — we need your support to deploy.</p>
+    <div class="btn-row">
+      <button class="btn btn-white" onclick="showPage('contact')">Contact Us</button>
+      <button class="btn btn-outline-white" onclick="showPage('product')">See Product Details</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     PAGE: PRODUCT
+══════════════════════════════════════ -->
+<div id="page-product" class="page">
+  <div class="product-hero">
+    <div class="product-hero-inner">
+      <div>
+        <div class="label" style="background:rgba(240,192,64,0.15);color:var(--gold3);">Product Specifications</div>
+        <h1>Built for the<br/><em>Sacred Space</em></h1>
+        <p>Two elegantly simple components. One transformative system. Tashkeel is designed to disappear into the mosque environment — unobtrusive, reliable, and spiritually respectful.</p>
+        <div style="margin-top:2rem;display:flex;gap:1rem;flex-wrap:wrap;">
+          <button class="btn btn-gold" onclick="showPage('contact')">Request a Demo Kit</button>
+          <button class="btn btn-outline-white" onclick="showPage('contact')">Wholesale Enquiry</button>
+        </div>
+      </div>
+      <div class="spec-visual">
+        <div class="sv-title">System Components</div>
+        <div class="sv-device">
+          <div class="sv-row">
+            <div class="sv-icon">🎙️</div>
+            <div class="sv-info"><h4>Imam Microphone Unit</h4><p>Lapel or podium mount · Connects to existing PA system</p></div>
+          </div>
+          <div style="height:1px;background:rgba(255,255,255,0.08);margin:0.3rem 0;"></div>
+          <div class="sv-row">
+            <div class="sv-icon">🎧</div>
+            <div class="sv-info"><h4>Wireless Earpiece</h4><p>In-ear · Pre-set language · 8-hour battery</p></div>
+          </div>
+          <div style="height:1px;background:rgba(255,255,255,0.08);margin:0.3rem 0;"></div>
+          <div class="sv-row">
+            <div class="sv-icon">📡</div>
+            <div class="sv-info"><h4>Translation Hub (Box)</h4><p>Processes audio · Broadcasts to all earpieces</p></div>
+          </div>
+          <div style="height:1px;background:rgba(255,255,255,0.08);margin:0.3rem 0;"></div>
+          <div class="sv-row">
+            <div class="sv-icon">📱</div>
+            <div class="sv-info"><h4>Tashkeel Mobile App</h4><p>Pair personal earpiece · Select language · QR join</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Specs -->
+  <section class="section specs-section">
+    <div class="container" style="max-width:1200px">
+      <div class="reveal">
+        <div class="label">Technical Specifications</div>
+        <div class="heading">Every Detail<br/><em>Engineered with Care</em></div>
+      </div>
+      <div class="specs-grid">
+
+        <div class="spec-panel reveal">
+          <div class="spec-panel-head">
+            <div class="icon">🎙️</div>
+            <div><h3>Imam Microphone</h3><p>The source of everything</p></div>
+          </div>
+          <div class="spec-rows">
+            <div class="spec-row"><span class="sr-key">Type</span><span class="sr-val">Lapel + podium mount (both included)</span></div>
+            <div class="spec-row"><span class="sr-key">Frequency Response</span><span class="sr-val green">80Hz – 18kHz</span></div>
+            <div class="spec-row"><span class="sr-key">Connectivity</span><span class="sr-val">Wireless 2.4GHz + 3.5mm aux</span></div>
+            <div class="spec-row"><span class="sr-key">Range to Hub</span><span class="sr-val green">Up to 100m</span></div>
+            <div class="spec-row"><span class="sr-key">Noise Cancellation</span><span class="sr-val green">Active CVC 8.0</span></div>
+            <div class="spec-row"><span class="sr-key">Battery</span><span class="sr-val">12 hours continuous</span></div>
+            <div class="spec-row"><span class="sr-key">Weight</span><span class="sr-val">18g (lapel unit)</span></div>
+          </div>
+        </div>
+
+        <div class="spec-panel reveal">
+          <div class="spec-panel-head">
+            <div class="icon">🎧</div>
+            <div><h3>Wireless Earpiece</h3><p>What the congregation wears</p></div>
+          </div>
+          <div class="spec-rows">
+            <div class="spec-row"><span class="sr-key">Form Factor</span><span class="sr-val">In-ear, IEM style</span></div>
+            <div class="spec-row"><span class="sr-key">Battery Life</span><span class="sr-val green">8 hours</span></div>
+            <div class="spec-row"><span class="sr-key">Charging</span><span class="sr-val">USB-C charging case</span></div>
+            <div class="spec-row"><span class="sr-key">Language Selection</span><span class="sr-val">Button + app</span></div>
+            <div class="spec-row"><span class="sr-key">Connectivity</span><span class="sr-val">Proprietary 2.4GHz</span></div>
+            <div class="spec-row"><span class="sr-key">Capacity per Hub</span><span class="sr-val gold">Unlimited</span></div>
+            <div class="spec-row"><span class="sr-key">Weight</span><span class="sr-val">5g per earpiece</span></div>
+          </div>
+        </div>
+
+        <div class="spec-panel reveal">
+          <div class="spec-panel-head">
+            <div class="icon">📡</div>
+            <div><h3>Translation Hub</h3><p>The brain of the system</p></div>
+          </div>
+          <div class="spec-rows">
+            <div class="spec-row"><span class="sr-key">Translation Latency</span><span class="sr-val green">&lt; 900ms</span></div>
+            <div class="spec-row"><span class="sr-key">Languages</span><span class="sr-val green">100+</span></div>
+            <div class="spec-row"><span class="sr-key">Source Languages</span><span class="sr-val">Arabic, Urdu, any language</span></div>
+            <div class="spec-row"><span class="sr-key">Internet Required</span><span class="sr-val">Yes (4G/WiFi) for live AI</span></div>
+            <div class="spec-row"><span class="sr-key">Offline Mode</span><span class="sr-val green">Common Surahs cached</span></div>
+            <div class="spec-row"><span class="sr-key">Setup Time</span><span class="sr-val green">Under 5 minutes</span></div>
+            <div class="spec-row"><span class="sr-key">Power</span><span class="sr-val">DC adapter (included)</span></div>
+          </div>
+        </div>
+
+        <div class="spec-panel reveal">
+          <div class="spec-panel-head">
+            <div class="icon">📱</div>
+            <div><h3>Mobile App</h3><p>Personal pairing & control</p></div>
+          </div>
+          <div class="spec-rows">
+            <div class="spec-row"><span class="sr-key">Platform</span><span class="sr-val">iOS + Android</span></div>
+            <div class="spec-row"><span class="sr-key">Pairing Method</span><span class="sr-val">QR code scan</span></div>
+            <div class="spec-row"><span class="sr-key">Language Setting</span><span class="sr-val green">Per-user, saved</span></div>
+            <div class="spec-row"><span class="sr-key">Mosque Discovery</span><span class="sr-val">GPS + manual code</span></div>
+            <div class="spec-row"><span class="sr-key">Phone-only Mode</span><span class="sr-val gold">Listen via phone speaker</span></div>
+            <div class="spec-row"><span class="sr-key">Price</span><span class="sr-val green">Free</span></div>
+            <div class="spec-row"><span class="sr-key">Account Required</span><span class="sr-val">No</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Architecture -->
+  <section class="section arch-section">
+    <div class="container" style="max-width:1200px">
+      <div class="reveal" style="text-align:center">
+        <div class="label">System Architecture</div>
+        <div class="heading" style="text-align:center">One-to-Many.<br/><em>Infinitely Scalable.</em></div>
+        <p class="subtext" style="margin:1rem auto;text-align:center;">A single Imam microphone supports an unlimited number of earpieces simultaneously — whether the mosque has 20 worshippers or 2,000.</p>
+      </div>
+      <div class="arch-inner reveal">
+        <div class="arch-diagram">
+          <svg viewBox="0 0 800 360" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;">
+            <!-- Background -->
+            <rect width="800" height="360" rx="12" fill="#FDFAF4"/>
+
+            <!-- IMAM BOX -->
+            <rect x="30" y="140" width="130" height="80" rx="10" fill="white" stroke="#1B6B4A" stroke-width="1.5"/>
+            <text x="95" y="165" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="11" font-weight="600" fill="#1A1208">IMAM</text>
+            <text x="95" y="182" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="10" fill="#7A6E5F">Microphone</text>
+            <text x="95" y="199" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="10" fill="#7A6E5F">Unit</text>
+            <text x="95" y="218" text-anchor="middle" font-size="16">🎙️</text>
+
+            <!-- Arrow 1 -->
+            <path d="M 162 180 L 205 180" stroke="#1B6B4A" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arrow)"/>
+            <text x="183" y="172" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="8" fill="#7A6E5F">Audio</text>
+
+            <!-- HUB BOX -->
+            <rect x="208" y="120" width="150" height="120" rx="12" fill="#1B6B4A"/>
+            <text x="283" y="152" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="11" font-weight="600" fill="white">TRANSLATION</text>
+            <text x="283" y="168" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="11" font-weight="600" fill="white">HUB</text>
+            <text x="283" y="190" text-anchor="middle" font-size="20">📡</text>
+            <text x="283" y="215" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="9" fill="rgba(255,255,255,0.7)">AI · 100+ Languages</text>
+            <text x="283" y="228" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="9" fill="rgba(255,255,255,0.7)">&lt;1 second latency</text>
+
+            <!-- Cloud arrow -->
+            <path d="M 283 120 L 283 85" stroke="#B8860B" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arrowgold)"/>
+            <rect x="220" y="50" width="126" height="34" rx="6" fill="rgba(184,134,11,0.1)" stroke="rgba(184,134,11,0.3)" stroke-width="1"/>
+            <text x="283" y="68" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="9" fill="#B8860B" font-weight="600">☁️ Cloud AI Server</text>
+            <text x="283" y="80" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="8" fill="#B8860B">Internet connection</text>
+
+            <!-- Broadcast arrows to earpieces -->
+            <path d="M 360 150 L 420 100" stroke="#1B6B4A" stroke-width="1.2" stroke-dasharray="5 3" marker-end="url(#arrow)"/>
+            <path d="M 360 180 L 420 180" stroke="#1B6B4A" stroke-width="1.2" stroke-dasharray="5 3" marker-end="url(#arrow)"/>
+            <path d="M 360 210 L 420 260" stroke="#1B6B4A" stroke-width="1.2" stroke-dasharray="5 3" marker-end="url(#arrow)"/>
+
+            <!-- Earpiece 1 - English -->
+            <rect x="422" y="62" width="120" height="72" rx="8" fill="white" stroke="rgba(27,107,74,0.3)" stroke-width="1.2"/>
+            <text x="482" y="84" text-anchor="middle" font-size="14">🎧</text>
+            <text x="482" y="102" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="10" font-weight="600" fill="#1A1208">Earpiece — EN</text>
+            <text x="482" y="118" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="9" fill="#7A6E5F">"Indeed, Allah is with...</text>
+            <text x="482" y="128" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="9" fill="#7A6E5F">the patient ones."</text>
+
+            <!-- Earpiece 2 - Urdu -->
+            <rect x="422" y="144" width="120" height="72" rx="8" fill="white" stroke="rgba(27,107,74,0.3)" stroke-width="1.2"/>
+            <text x="482" y="166" text-anchor="middle" font-size="14">🎧</text>
+            <text x="482" y="184" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="10" font-weight="600" fill="#1A1208">Earpiece — UR</text>
+            <text x="482" y="200" text-anchor="middle" font-family="Noto Nastaliq Urdu" font-size="9" fill="#7A6E5F">بے شک اللہ صبر کرنے</text>
+            <text x="482" y="210" text-anchor="middle" font-family="Noto Nastaliq Urdu" font-size="9" fill="#7A6E5F">والوں کے ساتھ ہے</text>
+
+            <!-- Earpiece 3 - French -->
+            <rect x="422" y="226" width="120" height="72" rx="8" fill="white" stroke="rgba(27,107,74,0.3)" stroke-width="1.2"/>
+            <text x="482" y="248" text-anchor="middle" font-size="14">🎧</text>
+            <text x="482" y="266" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="10" font-weight="600" fill="#1A1208">Earpiece — FR</text>
+            <text x="482" y="282" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="9" fill="#7A6E5F">"En vérité, Allah est</text>
+            <text x="482" y="292" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="9" fill="#7A6E5F">avec les patients."</text>
+
+            <!-- N more -->
+            <text x="482" y="330" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="10" fill="#7A6E5F" font-style="italic">+ unlimited more earpieces...</text>
+
+            <!-- Mobile app -->
+            <rect x="620" y="140" width="120" height="80" rx="8" fill="rgba(184,134,11,0.07)" stroke="rgba(184,134,11,0.3)" stroke-width="1.2"/>
+            <text x="680" y="168" text-anchor="middle" font-size="16">📱</text>
+            <text x="680" y="188" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="10" font-weight="600" fill="#B8860B">Mobile App</text>
+            <text x="680" y="203" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="9" fill="#7A6E5F">Personal earpiece</text>
+            <text x="680" y="215" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="9" fill="#7A6E5F">or phone speaker</text>
+            <path d="M 544 180 L 618 180" stroke="#B8860B" stroke-width="1.2" stroke-dasharray="5 3" marker-end="url(#arrowgold)"/>
+            <text x="581" y="172" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="8" fill="#B8860B">QR join</text>
+
+            <!-- Arrow markers -->
+            <defs>
+              <marker id="arrow" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+                <path d="M0,0 L0,6 L6,3 z" fill="#1B6B4A"/>
+              </marker>
+              <marker id="arrowgold" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+                <path d="M0,0 L0,6 L6,3 z" fill="#B8860B"/>
+              </marker>
+            </defs>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="cta-strip">
+    <h2>Interested in a Pilot?</h2>
+    <p>We are ready to install Tashkeel in your mosque for a free pilot programme. Contact us to schedule a demonstration.</p>
+    <div class="btn-row">
+      <button class="btn btn-white" onclick="showPage('contact')">Request a Pilot →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     PAGE: WHO IT HELPS
+══════════════════════════════════════ -->
+<div id="page-impact" class="page">
+  <section class="impact-hero">
+    <div class="impact-hero-inner container" style="max-width:1200px">
+      <div>
+        <div class="label">Who Tashkeel Helps</div>
+        <h1 class="heading" style="font-size:clamp(2.4rem,5vw,4rem);">Understanding<br/>The Words of<br/><em>Allah ﷻ</em></h1>
+        <div class="divider"></div>
+        <p class="subtext">The Quran was revealed for all of humanity — not just Arabic speakers. Tashkeel ensures that every Muslim, regardless of their mother tongue, can understand the words being recited in their mosque.</p>
+        <div style="margin-top:2rem;display:flex;gap:1rem;flex-wrap:wrap;">
+          <button class="btn btn-green" onclick="showPage('contact')">Join the Mission</button>
+          <button class="btn btn-outline" onclick="showPage('product')">See the Device</button>
+        </div>
+      </div>
+      <div>
+        <div class="quote-card">
+          <div class="qc-arabic">وَمَآ أَرْسَلْنَٰكَ إِلَّا رَحْمَةً لِّلْعَٰلَمِينَ</div>
+          <div class="qc-translation">
+            <strong>"And We have not sent you except as a mercy to the worlds."</strong><br/>
+            This verse reminds us that the message of Islam is universal — meant for every people, every language, every corner of the earth. Tashkeel helps that message reach every heart.
+          </div>
+          <div class="qc-source">— Surah Al-Anbiya, 21:107</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Before & After Journey -->
+  <section class="section journey-section">
+    <div class="journey-inner container" style="max-width:1000px">
+      <div class="reveal">
+        <div class="label">The Transformation</div>
+        <div class="heading">Before &amp; After<br/><em>Tashkeel</em></div>
+        <p class="subtext">This is the lived reality of millions of Muslims around the world — and how Tashkeel changes it.</p>
+      </div>
+      <div class="journey-steps">
+        <div class="journey-step reveal">
+          <div class="js-num before">1</div>
+          <div class="js-content">
+            <h3>Attending Jumu'ah Without Understanding</h3>
+            <p>A Pakistani Muslim living in France attends Friday prayers at his local mosque. The Imam delivers the Khutbah entirely in Arabic. He understands perhaps 10 words. He bows his head and waits, spiritually disconnected from the very sermon meant to guide him.</p>
+            <span class="js-tag tag-before">Before Tashkeel</span>
+          </div>
+        </div>
+        <div class="journey-step reveal">
+          <div class="js-num after">✓</div>
+          <div class="js-content">
+            <h3>Every Word, In His Language</h3>
+            <p>He puts in his Tashkeel earpiece, selects French. As the Imam speaks, he hears a clear French translation in his ear — the meaning of every Ayat, every point of the lecture, delivered in real time. For the first time, Jumu'ah feels personal.</p>
+            <span class="js-tag tag-after">With Tashkeel</span>
+          </div>
+        </div>
+        <div class="journey-step reveal">
+          <div class="js-num before">2</div>
+          <div class="js-content">
+            <h3>New Muslims Feeling Excluded</h3>
+            <p>A British woman who recently embraced Islam attends Taraweeh prayers during Ramadan. The Imam recites long passages of the Quran in Arabic. She has no idea what is being said and feels like an outsider in the religion she has chosen.</p>
+            <span class="js-tag tag-before">Before Tashkeel</span>
+          </div>
+        </div>
+        <div class="journey-step reveal">
+          <div class="js-num after">✓</div>
+          <div class="js-content">
+            <h3>Deeply Connected, Fully Included</h3>
+            <p>With Tashkeel, she hears an English translation of every verse being recited. The words of the Quran come alive for her. She weeps during prayer — not from confusion, but from understanding. She tells her imam it changed her relationship with Islam.</p>
+            <span class="js-tag tag-after">With Tashkeel</span>
+          </div>
+        </div>
+        <div class="journey-step reveal">
+          <div class="js-num before">3</div>
+          <div class="js-content">
+            <h3>Islamic Conferences Without Borders</h3>
+            <p>An international Islamic conference in Kuala Lumpur features scholars speaking in Arabic, Turkish, and English. Attendees from West Africa, South Asia, and Europe miss large portions of the talks because they don't speak all the languages.</p>
+            <span class="js-tag tag-before">Before Tashkeel</span>
+          </div>
+        </div>
+        <div class="journey-step reveal">
+          <div class="js-num after">✓</div>
+          <div class="js-content">
+            <h3>The Whole Ummah, One Conversation</h3>
+            <p>With Tashkeel's conference mode, every attendee selects their language. Arabic scholars are heard in Hausa, Turkish speakers in Bengali, English talks in Urdu. The diversity of the Ummah becomes its strength, not a barrier.</p>
+            <span class="js-tag tag-after">With Tashkeel</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Community voices -->
+  <section class="section community-section">
+    <div class="container" style="max-width:1200px">
+      <div class="reveal" style="text-align:center">
+        <div class="label">Community Voices</div>
+        <div class="heading" style="text-align:center">Who This Is Built For</div>
+      </div>
+      <div class="community-grid">
+        <div class="person-card reveal">
+          <div class="pc-avatar">🧔🏽</div>
+          <div class="pc-name">Ahmed — Non-Arabic Muslim</div>
+          <div class="pc-origin">Bengali speaker in London, UK</div>
+          <div class="pc-quote">"I've been attending Jumu'ah for 20 years and never fully understood the Khutbah. Tashkeel would change everything for people like me."</div>
+        </div>
+        <div class="person-card reveal">
+          <div class="pc-avatar">🧕</div>
+          <div class="pc-name">Fatimah — New Muslim</div>
+          <div class="pc-origin">English speaker in Sydney, Australia</div>
+          <div class="pc-quote">"As a revert, the language barrier made me feel like an outsider in my own faith. A device like this would make the mosque feel like home."</div>
+        </div>
+        <div class="person-card reveal">
+          <div class="pc-avatar">👴🏾</div>
+          <div class="pc-name">Imam Yusuf — Mosque Committee</div>
+          <div class="pc-origin">West African community mosque, Paris</div>
+          <div class="pc-quote">"Our congregation speaks French, Wolof, and Fula. The Imam lectures in Arabic. Tashkeel is exactly what we've been waiting for."</div>
+        </div>
+        <div class="person-card reveal">
+          <div class="pc-avatar">👩🏻</div>
+          <div class="pc-name">Zara — Student</div>
+          <div class="pc-origin">Turkish student in Germany</div>
+          <div class="pc-quote">"I understand some Arabic but not enough. With Tashkeel I could follow every word of the lecture and learn so much more from it."</div>
+        </div>
+        <div class="person-card reveal">
+          <div class="pc-avatar">👨🏿</div>
+          <div class="pc-name">Ibrahim — Conference Organiser</div>
+          <div class="pc-origin">Islamic events, Nairobi, Kenya</div>
+          <div class="pc-quote">"We run multilingual Islamic events. Hiring human interpreters is expensive and disruptive. Tashkeel is a game changer for us."</div>
+        </div>
+        <div class="person-card reveal">
+          <div class="pc-avatar">👨🏽‍🦳</div>
+          <div class="pc-name">Farooq — Masjid Trustee</div>
+          <div class="pc-origin">South Asian mosque, Manchester, UK</div>
+          <div class="pc-quote">"Our young people who grew up here don't understand Urdu or Arabic sermons. Tashkeel in English could reconnect an entire generation."</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="cta-strip">
+    <h2>Help Us Reach Every Mosque</h2>
+    <p>This is more than a product — it is a service to the Ummah. If you believe in this mission, get in touch. Every contribution matters.</p>
+    <div class="btn-row">
+      <button class="btn btn-white" onclick="showPage('contact')">Contact Danish →</button>
+      <button class="btn btn-outline-white" onclick="showPage('product')">View Specifications</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     PAGE: CONTACT
+══════════════════════════════════════ -->
+<div id="page-contact" class="page">
+  <section class="contact-hero">
+    <div class="contact-hero-inner">
+      <div class="label">Get In Touch</div>
+      <div class="heading" style="font-size:clamp(2rem,4vw,3.2rem);text-align:center;">Let's Bring Tashkeel<br/><em>to the World</em></div>
+      <div class="divider" style="margin:1.2rem auto;"></div>
+      <p style="color:var(--muted);line-height:1.8;font-size:0.95rem;">Whether you represent a mosque, want to invest, have a suggestion, or simply want to express support — every message is read and responded to personally.</p>
+    </div>
+  </section>
+
+  <div class="contact-grid">
+    <!-- Form -->
+    <div class="contact-form-wrap reveal">
+      <h2>Send a Message</h2>
+      <p>Tell us who you are and how you'd like to be involved. We'll reply within 24 hours, in sha Allah.</p>
+
+      <div style="margin-bottom:1.5rem;">
+        <div style="font-size:0.8rem;font-weight:600;color:var(--ink3);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:0.6rem;">I am reaching out to...</div>
+        <div class="intent-tags">
+          <div class="intent-tag invest" onclick="selectIntent(this,'invest')">💰 Invest / Fund</div>
+          <div class="intent-tag mosque" onclick="selectIntent(this,'mosque')">🕌 Request a Pilot</div>
+          <div class="intent-tag suggest" onclick="selectIntent(this,'suggest')">💡 Share Feedback</div>
+          <div class="intent-tag other" onclick="selectIntent(this,'other')">📨 General Enquiry</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" placeholder="Your name" id="inp-name"/>
+      </div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" placeholder="your@email.com" id="inp-email"/>
+      </div>
+      <div class="form-group">
+        <label>Organisation / Mosque (optional)</label>
+        <input type="text" placeholder="e.g. Al-Noor Mosque, London" id="inp-org"/>
+      </div>
+      <div class="form-group">
+        <label>Your Message</label>
+        <textarea placeholder="Tell us about your interest in Tashkeel, your community, or your questions..." id="inp-msg"></textarea>
+      </div>
+
+      <button class="btn btn-green" onclick="sendEmail()" style="width:100%;justify-content:center;">
+        Send via Email →
+      </button>
+      <p class="form-note">
+        Clicking the button will open your email client with the details pre-filled, addressed directly to <strong>danishfayaz09@gmail.com</strong>. Your message goes straight to the founder.
+      </p>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="contact-sidebar reveal">
+      <div class="cs-card">
+        <h3>Direct Contact</h3>
+        <p>Prefer to write directly? Reach the founder at:</p>
+        <a href="mailto:danishfayaz09@gmail.com" class="contact-link">
+          ✉️ danishfayaz09@gmail.com
+        </a>
+      </div>
+
+      <div class="cs-card">
+        <h3>💰 For Investors</h3>
+        <p>Tashkeel has completed manufacturing and is ready for commercial deployment. We are raising an initial round to scale distribution to mosques globally. If you are interested in early-stage investment in this space, we would love to speak.</p>
+        <a href="mailto:danishfayaz09@gmail.com?subject=Investment Enquiry — Tashkeel&body=Hi Danish,%0A%0AI am interested in learning more about investing in Tashkeel.%0A%0APlease share any available pitch materials or schedule a call.%0A%0ARegards," class="btn btn-gold btn" style="margin-top:0.5rem;font-size:0.8rem;">Request Pitch Deck →</a>
+      </div>
+
+      <div class="cs-card">
+        <h3>🕌 For Mosques</h3>
+        <p>We are looking for mosque pilot partners to be first adopters of Tashkeel. Selected pilot mosques receive the system at no cost for an initial trial period. Apply now.</p>
+        <a href="mailto:danishfayaz09@gmail.com?subject=Mosque Pilot Application — Tashkeel&body=Hi Danish,%0A%0AOur mosque is interested in participating in the Tashkeel pilot programme.%0A%0AMosque name:%0ALocation:%0AApproximate congregation size:%0A%0ALooking forward to hearing from you." class="btn btn-outline btn" style="margin-top:0.5rem;font-size:0.8rem;">Apply for Pilot →</a>
+      </div>
+
+      <div class="cs-card">
+        <h3>🌍 Project Status</h3>
+        <div style="display:flex;flex-direction:column;gap:0.6rem;margin-top:0.5rem;">
+          <div style="display:flex;align-items:center;gap:0.6rem;">
+            <span style="width:10px;height:10px;background:var(--emerald3);border-radius:50%;flex-shrink:0;"></span>
+            <span style="font-size:0.83rem;color:var(--ink3);">Hardware manufacturing — <strong>Complete</strong></span>
+          </div>
+          <div style="display:flex;align-items:center;gap:0.6rem;">
+            <span style="width:10px;height:10px;background:var(--emerald3);border-radius:50%;flex-shrink:0;"></span>
+            <span style="font-size:0.83rem;color:var(--ink3);">AI translation integration — <strong>Complete</strong></span>
+          </div>
+          <div style="display:flex;align-items:center;gap:0.6rem;">
+            <span style="width:10px;height:10px;background:var(--gold2);border-radius:50%;flex-shrink:0;"></span>
+            <span style="font-size:0.83rem;color:var(--ink3);">Pilot programme — <strong>Seeking partners</strong></span>
+          </div>
+          <div style="display:flex;align-items:center;gap:0.6rem;">
+            <span style="width:10px;height:10px;background:var(--muted2);border-radius:50%;flex-shrink:0;"></span>
+            <span style="font-size:0.83rem;color:var(--ink3);">Global rollout — <strong>After funding round</strong></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ FOOTER ════ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="logo-text-f">Tashkeel تشكيل</div>
+        <p>Real-time mosque translation technology — giving every Muslim the ability to understand the words of their Imam, regardless of language.</p>
+        <a href="mailto:danishfayaz09@gmail.com" class="footer-email">✉️ danishfayaz09@gmail.com</a>
+      </div>
+      <div class="footer-col">
+        <h4>Pages</h4>
+        <ul>
+          <li><button onclick="showPage('home')">Home</button></li>
+          <li><button onclick="showPage('product')">The Device</button></li>
+          <li><button onclick="showPage('impact')">Who It Helps</button></li>
+          <li><button onclick="showPage('contact')">Contact</button></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="mailto:danishfayaz09@gmail.com?subject=Investment Enquiry — Tashkeel">Invest in Tashkeel</a></li>
+          <li><a href="mailto:danishfayaz09@gmail.com?subject=Mosque Pilot — Tashkeel">Mosque Pilot</a></li>
+          <li><a href="mailto:danishfayaz09@gmail.com?subject=Feedback — Tashkeel">Send Feedback</a></li>
+          <li><a href="mailto:danishfayaz09@gmail.com">General Enquiry</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2025 Tashkeel. All rights reserved. · danishfayaz09@gmail.com</div>
+      <div class="footer-arabic">بِسْمِ ٱللَّٰهِ</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ── PAGE ROUTING ──
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  document.querySelectorAll('.nav-links button, .nav-links a').forEach(b => b.classList.remove('active'));
+  const nb = document.getElementById('nav-' + id);
+  if (nb) nb.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  setTimeout(checkReveal, 100);
+}
+
+// ── MOBILE MENU ──
+function toggleMenu() {
+  document.getElementById('mobileMenu').classList.toggle('open');
+}
+
+// ── SCROLL REVEAL ──
+function checkReveal() {
+  document.querySelectorAll('.reveal:not(.visible)').forEach((el, i) => {
+    const rect = el.getBoundingClientRect();
+    if (rect.top < window.innerHeight - 60) {
+      setTimeout(() => el.classList.add('visible'), i * 60);
+    }
+  });
+}
+window.addEventListener('scroll', checkReveal, { passive: true });
+checkReveal();
+
+// ── INTENT TAGS ──
+let selectedIntent = '';
+function selectIntent(el, intent) {
+  document.querySelectorAll('.intent-tag').forEach(t => t.classList.remove('sel'));
+  el.classList.add('sel');
+  selectedIntent = intent;
+}
+
+// ── SEND EMAIL ──
+function sendEmail() {
+  const name = document.getElementById('inp-name').value.trim() || 'Not provided';
+  const email = document.getElementById('inp-email').value.trim() || 'Not provided';
+  const org = document.getElementById('inp-org').value.trim() || 'Not provided';
+  const msg = document.getElementById('inp-msg').value.trim() || 'No message entered';
+  const intentMap = {
+    invest: 'Investment Enquiry',
+    mosque: 'Mosque Pilot Application',
+    suggest: 'Feedback / Suggestion',
+    other: 'General Enquiry',
+    '': 'Contact'
+  };
+  const subject = encodeURIComponent((intentMap[selectedIntent] || 'Contact') + ' — Tashkeel');
+  const body = encodeURIComponent(
+    `Name: ${name}\nEmail: ${email}\nOrganisation: ${org}\n\nMessage:\n${msg}`
+  );
+  window.location.href = `mailto:danishfayaz09@gmail.com?subject=${subject}&body=${body}`;
+}
+
+// ── STAGGER GRID CHILDREN ON REVEAL ──
+document.querySelectorAll('.how-steps, .benefit-grid, .specs-grid, .community-grid').forEach(grid => {
+  [...grid.children].forEach((child, i) => {
+    child.style.transitionDelay = `${i * 0.07}s`;
+  });
+});
+</script>
+
+<!-- ── FLOATING WHATSAPP BUTTON ── -->
+<a href="https://wa.me/?text=Hi%20Danish%2C%20I%20came%20across%20Tashkeel%20and%20wanted%20to%20get%20in%20touch..."
+   target="_blank" rel="noopener"
+   id="wa-btn"
+   title="Chat on WhatsApp"
+   style="position:fixed;bottom:1.8rem;right:1.8rem;z-index:999;width:54px;height:54px;border-radius:50%;background:#25D366;color:white;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 24px rgba(37,211,102,0.4);font-size:1.5rem;text-decoration:none;transition:transform 0.2s,box-shadow 0.2s;opacity:0;animation:fadeUp 0.6s 1.8s ease forwards;"
+   onmouseover="this.style.transform='scale(1.12)';this.style.boxShadow='0 10px 32px rgba(37,211,102,0.55)'"
+   onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 6px 24px rgba(37,211,102,0.4)'"
+>💬</a>
+
+</body>
+</html>
